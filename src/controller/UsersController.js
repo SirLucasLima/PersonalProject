@@ -1,11 +1,12 @@
-const sqliteConnection = require("../database/sqlite")
+const { hash }= require("bcryptjs");
+const sqliteConnection = require("../database/sqlite");
 const AppError = require("../utils/AppError");
 
 class UsersController {
   async create(request, response) {
     const { name, email, password } = request.body;
     
-    //conexão com db é assincrona
+    //conexão com db é assíncrona
     const database = await sqliteConnection();
 
     //email check
@@ -13,6 +14,14 @@ class UsersController {
     if(checkUserExists){
       throw new AppError("This e-mail is not available.")
     }
+    
+    //
+    const hashedPassword = hash(password, 8)
+
+    //insert
+    await database.run("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, password])
+
+    //return ok
     return response.status(201).json();
   }
 }
