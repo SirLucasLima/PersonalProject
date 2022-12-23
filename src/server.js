@@ -6,9 +6,9 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-//database
-const db = require("./database/sqlite")
-db();
+//migrations
+const migrationsRun = require("./database/sqlite/migrations")
+migrationsRun();
 
 //routes connection
 const routes = require("./routes");
@@ -30,7 +30,6 @@ app.use(( error, request, response, next ) => {
     status: "error"
   })
 })
-
 
 //listen on port
 const PORT = 3000;
