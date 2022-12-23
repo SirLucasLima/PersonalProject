@@ -6,30 +6,34 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-//migrations
-const migrationsRun = require("./database/sqlite/migrations")
-migrationsRun();
-
 //routes connection
 const routes = require("./routes");
 app.use(routes);
 
+//migrations
+const migrationsRun = require("./database/sqlite/migrations")
+migrationsRun();
+
 //AppError
 const AppError = require("./utils/AppError")
-app.use(( error, request, response, next ) => {
-  if( error instanceof AppError) {
+app.use(( error, request, response, next) => {
+  //if a instancia do erro for do "AppError" (erro do cliente)
+  if(error instanceof AppError) {
     return response.status(error.statusCode).json({
-      message: error.message,
-      status: "error"
+      status: "error",
+      message: error.message
     })
   }
+
+  //if o erro não for do cliente
+  return response.status(500).json({
+    status: "error",
+    message: `"Internal server error."${error}`
+  })
+
   console.error(error);
 
-  return response.status(500).json({
-    message: "Server internal error",
-    status: "error"
-  })
-})
+});
 
 //listen on port
 const PORT = 3000;
