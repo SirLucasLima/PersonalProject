@@ -6,7 +6,7 @@ class UsersController {
   async create(request, response) {
     const { name, email, password } = request.body;
     
-    //conexão com db é assíncrona
+    //conexão assíncrona com db 
     const database = await sqliteConnection();
     //email check
     const checkUserExists = await database.get('SELECT * FROM users WHERE email = (?)', 
@@ -26,6 +26,43 @@ class UsersController {
 
     //return ok
     return response.status(201).json();
+  }
+
+  async update(request, response) {
+    const { name, email } = request.body;
+    const { id } = request.params;
+
+    //conexão assíncrona com db 
+    const database = await sqliteConnection();
+    const user = await database.get("SELECT * FROM users WHERE id = (?)", 
+    [id]);
+
+    //id nao encontrado
+    if(!user) {
+      throw new AppError("The user was not found.");
+    }
+
+    const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email]);
+    //se o id encontrado através do email for diferente do id informado, então significa que o user está tentando usar um email de outro user
+    if(userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id){
+      throw new AppError("This e-mail is already in use.")
+    }
+
+    user.name = name
+    user.email = email
+
+    await database.run(`
+    UPDATE users SET
+    name = (?),
+    email = (?),
+    updated_at = (?)
+    WHERE id = (?)`,
+    [user.name, user.email, new Date(), id]
+    );
+
+    //status não precisa ser informado, pois o padrão informado será 200
+    return response.status(200).json();
+    
   }
 }
 
