@@ -7,15 +7,15 @@ module.exports = {
       //usando path para resolver navegação em qualquer OS
       filename: path.resolve(__dirname, "src", "database", "database.db")
     },
+    //funcionaldiade habilitada para deleção em cascata, dos linkls e tags
     pool: {
-      //funcionalidade para habilitar a deleção em cascata
-      afterCreate: (conn, cb) => conn.run("PRAGMA foreing_keys = ON", cb)
+      afterCreate: (conn, cb) => conn.run('PRAGMA foreing_keys = ON', cb)
     },
     migrations: {
       directory: path.resolve(__dirname, "src", "database", "knex", "migrations")
     },
     useNullAsDefault: true
-  }
+  },
 };
 
 
