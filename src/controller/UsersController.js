@@ -48,25 +48,29 @@ class UsersController {
       throw new AppError("This e-mail is already in use.");
     }
 
-    user.name = name
-    user.email = email
+    //se name ou email nao for ataulizado, sera recebido o mesmo anterior
+    user.name = name ?? user.name;
+    user.email = email ?? user.email;
 
-    //
-    
+    //error se o password antigo nao for informado
     if (password && !old_password){
       throw new AppError("You need to enter your current password.");
     }
 
+    //usando o "compare" para verificar se o password antigo foi informado corretamente
     if (password && old_password){
       const checkOldPassowrd = await compare(old_password, user.password);
-
+    
+      //se nao foi
       if(!checkOldPassowrd) {
         throw new AppError("The current password entered is not correct.")
       }
-
+    
+      //se foi
       user.password = await hash(password, 8)
     }
 
+    //controller do banco de dados
     await database.run(`
     UPDATE users SET
     name = (?),
