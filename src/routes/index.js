@@ -2,13 +2,13 @@ const { Router } = require("express");
 const routes = Router();
 
 //arquivo para agrupar todas as rotas da aplicação
-const userRouter = require("./users.routes"); 
-const notesRouter = require("./tags.routes"); 
 const tagsRouter = require("./notes.routes"); 
+const notesRouter = require("./tags.routes"); 
+const userRouter = require("./users.routes"); 
 
-routes.use("/users", userRouter)
 routes.use("/notes", notesRouter)
 routes.use("/tags", tagsRouter)
+routes.use("/users", userRouter)
 
 module.exports = routes;
 
