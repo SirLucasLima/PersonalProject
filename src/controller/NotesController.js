@@ -65,14 +65,22 @@ class NotesController{
 
        //pesquisar por tag 
       notes = await knex("tags")
-      .whereIn("name", filterTags)
+        .select([
+          "notes.id",
+          "notes.title",
+          "notes.user_id",
+        ])
+        .wuere("notes.user_id", user_id)
+        .whereLike("notes.title", `%${title}%`)
+        .whereIn("name", filterTags)
+        .innerJoin("notes", "notes.id", "tags.note_id")
 
     // se a pesquisar não for por tag
     } else {
       notes = await knex("notes")
-      .where({user_id})
-      .whereLike("title", `%${title}%`)
-      .orderBy("title");
+        .where({user_id})
+        .whereLike("title", `%${title}%`)
+        .orderBy("title");
     }
 
     return response.json(notes);
