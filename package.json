@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
+    "knex": "npx knex init",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,6 +15,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
+    "knex": "^2.4.2",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4"
   },
@@ -21,3 +23,5 @@
     "nodemon": "^2.0.20"
   }
 }
+
+
