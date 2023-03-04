@@ -1,4 +1,4 @@
-const { hash } = require("bcryptjs")
+const { hash, compare } = require("bcryptjs")
 const AppError = require("../utils/AppError")
 const sqliteConnection = require("../database/sqlite")
 
@@ -26,7 +26,7 @@ class UsersController {
     const database = await sqliteConnection()
   
     //--------- create user ---------//
-    const { name, email, password } = request.body
+    const { name, email, password, current_password } = request.body
     const { id } = request.params
 
     const user = await database.get("SELECT * FROM users WHERE id = (?)", [id])
@@ -42,13 +42,28 @@ class UsersController {
     user.name = name
     user.email = email
 
+    if (password && !current_password) {
+      throw new AppError("Please enter your current password as well")
+    }
+
+    if (password && current_password) {
+      const CheckCurrentPassword = await compare(current_password, user.password)
+
+      if(!CheckCurrentPassword) {
+        throw new AppError("Incorrect current password")
+      }
+
+      user.password = await hash(password, 8)
+    }
+
     await database.run(`
       UPDATE users SET
       name = ?,
       email = ?,
+      password = ?,
       updated_at = ?
-      WHERE id = ?`
-      [user.name, user.email, new Date(), id]
+      WHERE id = ?`,
+      [user.name, user.email, user.password, new Date(), id]
     )
     
     return response.status(200).json()
