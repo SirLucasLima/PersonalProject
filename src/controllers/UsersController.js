@@ -39,8 +39,8 @@ class UsersController {
       throw new AppError("This email is already in use")
     }
 
-    user.name = name
-    user.email = email
+    user.name = name ?? user.name
+    user.email = email ?? user.email
 
     if (password && !current_password) {
       throw new AppError("Please enter your current password as well")
@@ -61,9 +61,9 @@ class UsersController {
       name = ?,
       email = ?,
       password = ?,
-      updated_at = ?
+      updated_at = DATETIME('now')
       WHERE id = ?`,
-      [user.name, user.email, user.password, new Date(), id]
+      [user.name, user.email, user.password, id]
     )
     
     return response.status(200).json()
