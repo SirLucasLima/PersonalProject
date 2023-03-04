@@ -1,6 +1,6 @@
 exports.up = knex => knex.schema.createTable("notes", table => {
   table.increments("id")
-  table.string("title")
+  table.string("title").notNullable()
   table.string("description")
   table.integer("user_id").references("id").inTable("users").onDelete("CASCADE")
   table.timestamp("created_at").default(knex.fn.now())

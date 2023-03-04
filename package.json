@@ -7,8 +7,8 @@
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
     "knex": "npx knex init",
-    "tableFile": "npx knex migrate:make",
-    "tableDB": "npx knex migrate:latest"
+    "make": "npx knex migrate:make",
+    "latest": "npx knex migrate:latest"
   },
   "keywords": [],
   "author": "",
