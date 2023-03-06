@@ -3,9 +3,9 @@ const path = require("path")
 const crypto = require("crypto")
 
 const tempFolder = path.resolve(__dirname, "..", "..", "temp")
-const uploadsFolder = path.resolve(__dirname, "uploads")
+const uploadsFolder = path.resolve(tempFolder, "uploads")
 
-const multer = {
+const multerConfig = {
   storage: multer.diskStorage({
     destination: tempFolder,
     filename(request, file, callback){
@@ -20,5 +20,5 @@ const multer = {
 module.exports = {
   tempFolder,
   uploadsFolder,
-  multer
+  multerConfig
 }
