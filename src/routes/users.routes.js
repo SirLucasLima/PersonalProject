@@ -6,8 +6,9 @@ const { multerConfig } = require("../configs/upload")
 const upload = multer(multerConfig)
 
 const UsersController = require("../controllers/UsersController")
-const UserAvatarController = require("../controllers/UserAvatarController")
 const usersController = new UsersController()
+
+const UserAvatarController = require("../controllers/UserAvatarController")
 const userAvatarController = new UserAvatarController()
 
 const ensureAuthentication = require("../middleware/ensureAuthentication")
